@@ -103,6 +103,25 @@ function renderCart() {
 
   renderTotalTime();
 }
+const totalPriceEl = document.getElementById('total-price');
+
+function renderTotalPrice() {
+  const cartItems = loadCartItems();
+  const total = cartItems.reduce((sum, service) => {
+    if (typeof service === 'object' && service.price) {
+      return sum + parseFloat(service.price);
+    }
+    return sum;
+  }, 0);
+
+  if (total > 0) {
+    totalPriceEl.textContent = `Total Price: £${total.toFixed(2)}`;
+    totalPriceEl.style.display = 'block';
+  } else {
+    totalPriceEl.style.display = 'none';
+  }
+}
+
 
 // Remove service from cart
 function removeFromCart(index) {
@@ -120,7 +139,10 @@ checkoutBtn.addEventListener('click', () => {
   renderCart();
   renderAppointmentDate();
   renderTotalTime();
+  renderTotalPrice();
+
 });
+
 
 // Initial render
 renderCart();
