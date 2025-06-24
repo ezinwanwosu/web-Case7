@@ -448,7 +448,7 @@ img{
     body{
     margin: 20% 5%;
     background-color: black;
-    overflow: hidden;
+    overflow-x: hidden;
 }
 /*welcome page*/
 .header{
@@ -456,7 +456,7 @@ img{
 }
 .header h2{
     font-size: 2rem;
-    margin-top: 300px;
+    margin-top: 400px;
     text-align: center;
 
 }
