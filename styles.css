@@ -6,7 +6,7 @@
     
 }
 :root{
-    --babypink:rgb(251, 182, 182);
+    --babypink:#FFA4EE;
 }
 @font-face {
   font-family: 'Custom';
@@ -140,7 +140,7 @@ img{
     text-align: center;
     box-shadow:
     0 0 5px white,
-    0 0 15px rgb(250, 131, 131),
+    0 0 15px var(--babypink),
     0 0 30px rgb(255, 255, 255); /* this creates the glow */
 }
 .policies h1 {
@@ -217,33 +217,37 @@ img{
 }
 /* Add this to your CSS */
 .fc-day-today {
-  border: 6px solid #eeb0cf !important; /* bright pink border */
+  border: 6px solid var(--babypink) !important; /* bright pink border */
   border-radius: 50%;
   background-color: rgba(255, 255, 255, 0.284) !important; /* light pink background */
 }
 
 /* Change the Today button background and text color */
 .fc .fc-today-button {
-  background-color: pink !important;
+  background-color: var(--babypink) !important;
   color: black !important;
   border: none !important;
-  box-shadow: 0 0 5px pink;
+  box-shadow: 0 0 5px var(--babypink);
 }
-
+#calendar-legend{
+  text-align: center;
+  position: relative;
+  left: 30px;
+}
 /* Change the Prev and Next arrow button colors */
 .fc .fc-prev-button,
 .fc .fc-next-button {
-  background-color: pink !important;
+  background-color: var(--babypink) !important;
   color: black !important;
   border: none !important;
-  box-shadow: 0 0 5px pink;
+  box-shadow: 0 0 5px var(--babypink);
 }
 
 /* Optional: Change arrow hover effects */
 .fc .fc-prev-button:hover,
 .fc .fc-next-button:hover,
 .fc .fc-today-button:hover {
-  background-color: hotpink !important;
+  background-color: #fe11d3 !important;
   color: white !important;
   cursor: pointer;
 }
@@ -439,8 +443,8 @@ img{
     line-height: 50px;
     box-shadow:
         0 0 5px white,
-        0 0 15px rgb(250, 131, 131),
-        0 0 30px rgb(240, 40, 40); /* this creates the glow */
+        0 0 15px var(--babypink),
+        0 0 30px #f420cd; /* this creates the glow */
 
 }
 .label h2{
@@ -780,22 +784,7 @@ img{
 .label{
     font-size:0.3rem;
     position: absolute;
-    width: 100px;
-    height:200px;
-    text-align: justify;
-    background-color: transparent;
-    border-radius: 10px;
-    border-color: var(--babypink);
-    padding: 20px;
-    transition: 0.5s;
-    left: calc(50% - 110px);
-    top: 0;
-    line-height: 50px;
-    box-shadow:
-        0 0 5px white,
-        0 0 15px rgb(250, 131, 131),
-        0 0 30px rgb(240, 40, 40); /* this creates the glow */
-
+  
 }
 .label h2{
     display: flex;
@@ -1147,22 +1136,7 @@ img{
 .label{
     font-size:0.3rem;
     position: absolute;
-    width: 200px;
-    height:200px;
-    text-align: justify;
-    background-color: transparent;
-    border-radius: 10px;
-    border-color: var(--babypink);
-    padding: 20px;
-    transition: 0.5s;
-    left: calc(50% - 110px);
-    top: 0;
-    line-height: 50px;
-    box-shadow:
-        0 0 5px white,
-        0 0 15px rgb(250, 131, 131),
-        0 0 30px rgb(240, 40, 40); /* this creates the glow */
-
+ 
 }
 .label h2{
     font-size: 3rem;
