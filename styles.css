@@ -8,7 +8,7 @@
 }
 @font-face {
     font-family:'Custom' ;
-    src: url('/SuperShiny-0v0rG.ttf');
+    src: url('/SuperShiny-0v0rG.ttf') format(truetype);
 }
 body{
     margin: 10% 20%;
