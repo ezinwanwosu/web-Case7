@@ -7,9 +7,12 @@
     --babypink:rgb(251, 182, 182);
 }
 @font-face {
-    font-family:'Custom' ;
-    src: url('/SuperShiny-0v0rG.ttf') format(truetype);
+  font-family: 'Custom';
+  src: url('/SuperShiny-0v0rG.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
 }
+
 body{
     margin: 10% 20%;
     background-color: black;

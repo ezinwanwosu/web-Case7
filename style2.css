@@ -6,9 +6,12 @@ body {
     color: white;
 }
 @font-face {
-    font-family:'Custom' ;
-    src: url('/SuperShiny-0v0rG.ttf');
+  font-family: 'Custom';
+  src: url('fonts/SuperShiny.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
 }
+
 h1 {
     text-align: center; 
     font-family: 'Custom';
