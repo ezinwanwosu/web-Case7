@@ -2,13 +2,14 @@
     scroll-behavior: smooth;
     font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
     color: white;
+    
 }
 :root{
     --babypink:rgb(251, 182, 182);
 }
 @font-face {
   font-family: 'Custom';
-  src: url('/SuperShiny-0v0rG.ttf') format('truetype');
+  src: url('SuperShiny-0v0rG.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
@@ -16,6 +17,7 @@
 body{
     margin: 10% 20%;
     background-color: black;
+    overflow-x: hidden;
 }
 /*welcome page*/
 .header{
@@ -447,7 +449,7 @@ img{
     -webkit-user-select: none; /* Safari */
     -ms-user-select: none;     /* IE 10+ */
 }
-@media (max-width:428px){
+@media (max-width:688px){
     body{
     margin: 20% 5%;
     background-color: black;
