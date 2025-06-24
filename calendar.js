@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
       title: '',
       start: date,
       display: 'background',  // Important! This makes the event a background highlight
-      backgroundColor: 'hotpink', // pink background for entire cell
+      backgroundColor: '#FFA4EE;', // pink background for entire cell
     })),
     eventDidMount: function(info) {
       // Optional: style

@@ -20,12 +20,16 @@ function saveCartItems(items) {
 function loadSelectedDate() {
   return localStorage.getItem(selectedDateKey) || '';
 }
+function loadSelectedTime() {
+  return localStorage.getItem('selectedTime') || '';
+}
 
 // Display appointment date
 function renderAppointmentDate() {
   const date = loadSelectedDate();
+  const time = loadSelectedTime();
   if (date) {
-    appointmentDateEl.textContent = `Appointment Date: ${date}`;
+    appointmentDateEl.textContent = `Appointment Date: ${date} Time: ${time}`;
     appointmentDateEl.style.display = 'block';
   } else {
     appointmentDateEl.style.display = 'none';
@@ -66,6 +70,26 @@ function renderTotalTime() {
     totalTimeEl.style.display = 'none';
   }
 }
+const totalPriceEl = document.getElementById('total-price');
+
+function renderTotalPrice() {
+  const cartItems = loadCartItems();
+  let total = 0;
+
+  cartItems.forEach(service => {
+    if (typeof service === 'object' && service.price) {
+      total += parseFloat(service.price);
+    }
+  });
+
+  if (total > 0) {
+    totalPriceEl.textContent = `Total Price: £${total.toFixed(2)}`;
+    totalPriceEl.style.display = 'block';
+  } else {
+    totalPriceEl.style.display = 'none';
+  }
+}
+
 
 // Render cart UI
 function renderCart() {
@@ -81,7 +105,7 @@ function renderCart() {
 
     cartItems.forEach((service, index) => {
       const li = document.createElement('li');
-      if (typeof service === 'string') {
+      if (typeof service === 'string' && service != 'time') {
         li.textContent = service;
       } else if (service.name) {
         li.textContent = `${service.name} (${service.time || 'N/A'})`;
@@ -102,25 +126,10 @@ function renderCart() {
   }
 
   renderTotalTime();
-}
-const totalPriceEl = document.getElementById('total-price');
+  renderTotalPrice();
 
-function renderTotalPrice() {
-  const cartItems = loadCartItems();
-  const total = cartItems.reduce((sum, service) => {
-    if (typeof service === 'object' && service.price) {
-      return sum + parseFloat(service.price);
-    }
-    return sum;
-  }, 0);
-
-  if (total > 0) {
-    totalPriceEl.textContent = `Total Price: £${total.toFixed(2)}`;
-    totalPriceEl.style.display = 'block';
-  } else {
-    totalPriceEl.style.display = 'none';
-  }
 }
+
 
 
 // Remove service from cart
