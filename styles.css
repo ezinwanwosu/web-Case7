@@ -742,39 +742,9 @@ img{
 }
 
 .next, .prev {
-  position: absolute;
-  top: 40%;
-  color: white;
-  background-color: transparent;
-  border: 2px solid white;
-  border-radius: 40px;
-  width: 30px;
-  height: 30px;
-  font-size:xx-large;
-  font-family: monospace;
-  font-weight: bold;
-  left: 300px;
-  line-height: 20px;
-  z-index: 1;
-  transition: color 0.3s ease;
+  display: none;
 }
 
-.next{
-    left: unset;
-    right: -170px;
-}
-.prev{
-    right: unset;
-    left: -150px
-}
-.prev:hover{
-    background-color: white;
-    color: var(--babypink);
-}
-.next:hover{
-    background-color: white;
-    color: var(--babypink);
-}
 .services{
     margin-top: 0px;
 
