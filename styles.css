@@ -3,6 +3,7 @@
     font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
     color: white;
     
+    
 }
 :root{
     --babypink:rgb(251, 182, 182);
@@ -15,6 +16,7 @@
 }
 
 body{
+  width:100vw;
     margin: 10% 20%;
     background-color: black;
     overflow-x: hidden;
@@ -579,11 +581,12 @@ img{
   color: white;
   margin-bottom: -100px;
   display: block;
+  padding: 0;
   width: fit-content;
-  padding: 1rem 2rem;
+  
   position: relative;
   top: -120px;
-  left:1%;
+  left:0;
   z-index: 0;
 }
 
@@ -601,11 +604,19 @@ img{
   font-size: 2.5rem;
   letter-spacing: 3px;
   text-align: center;
-  background-color: black;
+  background: linear-gradient(
+  to right,
+  transparent 0%,
+  transparent 5%,
+  black 10%,
+  black 90%,
+  transparent 95%,
+  transparent 100%
+);
   color: white;
   display: block;
   width: fit-content;
-  padding: 1rem -1.7rem;
+  padding: -20px;
   position: relative;
   top: -110px;
 }
@@ -642,10 +653,10 @@ img{
   color: white;
   display: block;
   width: fit-content;
-  padding: 1rem 2rem;
+  padding:0;
   position: relative;
   top: -110px;
-  left:1%;
+  left:15%;
 }
 .contact a{
     position: relative;
@@ -825,6 +836,10 @@ img{
     user-select: none;
     -webkit-user-select: none; /* Safari */
     -ms-user-select: none;     /* IE 10+ */
+}
+#freestyle-carousel h2{
+  position: relative;
+  right:10px;
 }
 }
 
