@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
       title: '',
       start: date,
       display: 'background',  // Important! This makes the event a background highlight
-      backgroundColor: '#FFA4EE;', // pink background for entire cell
+      backgroundColor: '#FFA4EE', // pink background for entire cell
     })),
     eventDidMount: function(info) {
       // Optional: style
@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function () {
         tick.style.position = 'absolute';
         tick.style.top = '15px';
         tick.style.right = '15px';
-        tick.style.fontSize = '1.5rem';
+        tick.style.fontSize = '2.5rem';
         tick.style.color = 'white';
         dayCell.style.position = 'relative';
         dayCell.appendChild(tick);
@@ -81,12 +81,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // On page load, restore tick mark if date was already selected
   const savedDate = localStorage.getItem('selectedDate');
-  if (savedDate) {
-    markDateWithTick(savedDate);
-    selectedDateEl.textContent = `Selected Date: ${savedDate}`;
-    timeSlotBox.style.display = 'none';
-    
-  }
-  calendar.render();
+
+calendar.render();
+
+// Wait until the calendar has finished rendering the visible dates
+calendar.on('datesSet', function () {
+    if (savedDate) {
+      markDateWithTick(savedDate);
+      selectedDateEl.textContent = `Selected Date: ${savedDate}`;
+      timeSlotBox.style.display = 'none';
+    }
+  });
+
 });
 console.log(window.calendar);
