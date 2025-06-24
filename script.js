@@ -3,6 +3,8 @@ const cartItemsKey = 'yonceCartItems';
 let cartItems = [];
 let selectedServiceName = '';
 let selectedServiceTime = '';
+let selectedServicePrice = '';
+
 const cartCountElement = document.getElementById('cart-count');
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -39,19 +41,19 @@ function closePopup() {
 }
 
 function confirmAddToCart() {
-  addToCart(selectedServiceName, selectedServiceTime);
+  addToCart(selectedServiceName, selectedServiceTime, selectedServicePrice);
   closePopup();
 }
 
-function addToCart(serviceName, serviceTime) {
-  cartItems.push({ name: serviceName, time: serviceTime });
+function addToCart(serviceName, serviceTime, servicePrice) {
+  cartItems.push({ name: serviceName, time: serviceTime, price: servicePrice });
   saveCartItems(cartItems);
   updateCartCount();
 
   cartCountElement.classList.add('animate');
   setTimeout(() => cartCountElement.classList.remove('animate'), 300);
 
-  console.log(`Added "${serviceName}" (${serviceTime}) to cart.`);
+  console.log(`Added "${serviceName}" (${serviceTime}, £${servicePrice}) to cart.`);
 }
 
 function setupCarousels() {
@@ -109,10 +111,10 @@ function setupCarousels() {
       card.addEventListener('click', () => {
         selectedServiceName = card.dataset.name;
         selectedServiceTime = card.dataset.time || 'N/A';
+        selectedServicePrice = card.dataset.price || '0';
         if (selectedServiceName) {
           showPopup();
         }
-       
       });
     });
 
@@ -140,10 +142,8 @@ function setupCarousels() {
     });
 
     container.addEventListener('mousemove', e => {
-      if (isDragging) {
-        if (Math.abs(e.clientX - startX) > 5) {
-          dragMoved = true;
-        }
+      if (isDragging && Math.abs(e.clientX - startX) > 5) {
+        dragMoved = true;
       }
     });
 
@@ -159,15 +159,15 @@ function setupCarousels() {
         if (clickedCard) {
           selectedServiceName = clickedCard.dataset.name;
           selectedServiceTime = clickedCard.dataset.time || 'N/A';
+          selectedServicePrice = clickedCard.dataset.price || '0';
           if (selectedServiceName) {
-              showPopup();
+            showPopup();
           }
-        
         }
       }
     });
 
-    container.addEventListener('mouseleave', e => {
+    container.addEventListener('mouseleave', () => {
       if (isDragging) {
         isDragging = false;
         container.classList.remove('noselect');

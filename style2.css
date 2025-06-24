@@ -11,7 +11,9 @@ body {
   font-weight: normal;
   font-style: normal;
 }
-
+:root{
+    --babypink:#FFA4EE;
+}
 h1 {
     text-align: center; 
     font-family: 'Custom';
@@ -29,7 +31,7 @@ li {
     align-items: center; 
 }
 button.remove-btn { 
-    background: #f4958e; 
+    background: var(--babypink); 
     color: white; 
     border: none; 
     padding: 6px 12px; 
@@ -44,7 +46,7 @@ button.remove-btn:hover {
     width: 100%; 
     padding: 15px; 
     font-size: 18px; 
-    background-color: #ff8585; 
+    background-color: var(--babypink); 
     color: white; 
     border: none; 
     border-radius: 

@@ -54,8 +54,8 @@ img{
     
     box-shadow:
     0 0 5px white,
-    0 0 15px rgb(250, 131, 131),
-    0 0 30px rgb(240, 40, 40); /* this creates the glow */
+    0 0 15px var(--babypink),
+    0 0 30px #fa66df; /* this creates the glow */
     margin-bottom: -25%;
 
 }
