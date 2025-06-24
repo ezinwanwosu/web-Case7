@@ -102,9 +102,7 @@ img{
     transform: scale(1);
   }
 }
-
 .policies {
-  text-align: left;
   border: 10px solid var(--babypink);
   box-shadow:
     0 0 5px white,
@@ -113,50 +111,51 @@ img{
   margin: 10% auto;
   padding: 2rem;
   display: flex;
-  gap: 6rem; /* small, readable gap */
-  justify-content: space-between;
-  margin-bottom: 300px;
- 
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: center;
+  background-color: black;
+}
+
+.policies h1 {
+  width: 100%;
+  text-align: center;
+  font-family: 'Custom';
+  font-size: 2.5rem;
+  letter-spacing: 2px;
+  color: white;
+  margin-bottom: 2rem;
 }
 
 .policy {
-  flex: 1 1 200px; /* flexible size but minimum of 200px */
-  position: relative;
-  left:-350px;
+  flex: 1 1 250px;
+  max-width: 300px;
   color: white;
   padding: 1rem;
   border-radius: 10px;
   text-align: center;
-  
+  background-color: rgba(255, 255, 255, 0.05); /* Optional subtle background */
+  box-shadow:
+    0 0 5px white,
+    0 0 10px var(--babypink),
+    0 0 20px white;
 }
-.policy i{
-    font-size:2rem;
-    border: 2px solid white;
-    border-radius: 30px;
-    background-color: transparent;
-    width: 60px;
-    height: 60px;
-    line-height: 60px;
-    text-align: center;
-    box-shadow:
+
+.policy i {
+  font-size: 2rem;
+  border: 2px solid white;
+  border-radius: 50%;
+  background-color: transparent;
+  width: 60px;
+  height: 60px;
+  line-height: 60px;
+  text-align: center;
+  display: inline-block;
+  margin-bottom: 1rem;
+  box-shadow:
     0 0 5px white,
     0 0 15px var(--babypink),
-    0 0 30px rgb(255, 255, 255); /* this creates the glow */
-}
-.policies h1 {
-  font-family: 'Custom';
-  font-size: 4rem;
-  letter-spacing: 3px;
-  text-align: center;
-  background-color: black;
-  color: white;
-  margin: 2rem auto;
-  display: block;
-  width: fit-content;
-  padding: 1rem 2rem;
-  position: relative;
-  top: -120px;
-  left:35%;
+    0 0 30px white;
 }
 
 .hours{
