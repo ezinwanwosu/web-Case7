@@ -784,6 +784,7 @@ img{
 .label{
     font-size:0.3rem;
     position: absolute;
+    width:100px;
   
 }
 .label h2{
@@ -893,12 +894,12 @@ img{
     0 0 30px rgb(255, 255, 255);
   display: flex;
   gap: 2.6rem; 
-  justify-content: space-between;
+ 
   margin-bottom: 300px;
  
 }
 .policy{
-  left:-300px;
+  text-align: center;
 }
 
 .policies h1 {
@@ -908,13 +909,13 @@ img{
   text-align: center;
   background-color: black;
   color: white;
-  margin: 2rem auto;
+  margin: 2rem auto 0 auto;
   display: block;
   width: fit-content;
-  padding: 0;
+  padding: 30px;
   position: relative;
   top: -120px;
-  left:30%;
+  margin-bottom: 20px;
  
 }
 
@@ -1147,3 +1148,4 @@ img{
     -ms-user-select: none;     /* IE 10+ */
 }
 }
+@media (min-width:1300px) and (max
