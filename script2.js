@@ -143,6 +143,7 @@ function removeFromCart(index) {
 // Checkout handler
 checkoutBtn.addEventListener('click', () => {
   alert('Thank you! You will be redirected to the deposit payment process.');
+  window.location.href = "https://buy.stripe.com/test_28E6oG456b7f35J4KfaIM00";
   localStorage.removeItem(cartItemsKey);       // Clear cart
   localStorage.removeItem(selectedDateKey);    // Clear date
   renderCart();
