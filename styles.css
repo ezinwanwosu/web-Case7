@@ -47,8 +47,8 @@ img{
     border: 10px solid var(--babypink);
     border-radius: 4000px;
     text-align: left;
-    width: 300px;
-    height: 300px;
+    width: 400px;
+    height: 390px;
     border-color: var(--babypink);
     top:-300px;
     
@@ -483,7 +483,7 @@ img{
     border-radius: 4000px;
     text-align: center;
     width: 200px;
-    height: 200px;
+    height: 190px;
     border-color: var(--babypink);
     top:20%;
     left:25%;
@@ -824,7 +824,7 @@ img{
     border-radius: 4000px;
     text-align: center;
     width: 250px;
-    height: 250px;
+    height: 240px;
     left:30%;
     border-color: var(--babypink);
     top:-230px;
