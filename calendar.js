@@ -1,67 +1,82 @@
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', async function () {
   const calendarEl = document.getElementById('calendar');
   const slotList = document.getElementById('slot-list');
   const selectedDateEl = document.getElementById('selected-date');
   const timeSlotBox = document.getElementById('timeslots');
 
-  const bookableDays = {
-    "2025-07-01": ["10:00 AM", "11:30 AM", "2:00 PM"],
-    "2025-07-03": ["12:00 PM", "3:00 PM", "5:00 PM"],
-    "2025-07-05": ["9:00 AM", "1:00 PM"]
-    // Fetch from backend in future
-  };
+  let bookableDays = {}; // Will be filled by backend
 
-  const calendar = new FullCalendar.Calendar(calendarEl, {
-    initialView: 'dayGridMonth',
-    selectable: true,
-    showNonCurrentDates: false,
-    dateClick: function (info) {
-      const dateStr = info.dateStr;
+  // 🔁 Fetch availability data from backend
+  async function loadAvailability() {
+    const res = await fetch('http://127.0.0.1:5000/api/availability'); // Flask API URL
+    const data = await res.json();
+    
+    // Group by date
+    const grouped = {};
+    data.forEach(item => {
+      const date = item.start.split("T")[0];
+      const time = new Date(item.start).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      if (!grouped[date]) grouped[date] = [];
+      grouped[date].push(time);
+    });
 
-      if (bookableDays[dateStr]) {
-        selectedDateEl.textContent = dateStr;
-        timeSlotBox.style.display = 'block';
-        slotList.innerHTML = '';
-        bookableDays[dateStr].forEach(slot => {
-          const li = document.createElement('li');
-          li.textContent = slot;
-          li.classList.add('timeslot');
+    bookableDays = grouped;
+    loadCalendar(); // re-render calendar after loading
+  }
+
+  function loadCalendar() {
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: 'dayGridMonth',
+      selectable: true,
+      showNonCurrentDates: false,
+      dateClick: function (info) {
+        const dateStr = info.dateStr;
+
+        if (bookableDays[dateStr]) {
+          selectedDateEl.textContent = `Selected Date: ${dateStr}`;
+          timeSlotBox.style.display = 'block';
+          slotList.innerHTML = '';
+          bookableDays[dateStr].forEach(slot => {
+            const li = document.createElement('li');
+            li.textContent = slot;
+            li.classList.add('timeslot');
             li.addEventListener('click', () => {
-
-                localStorage.setItem('selectedDate', dateStr);
-                localStorage.setItem('selectedTime', slot);
-                console.log(dateStr);
-                console.log(slot);
-                markDateWithTick(dateStr)
-
-    // You can also optionally redirect to checkout page here or update UI
+              localStorage.setItem('selectedDate', dateStr);
+              localStorage.setItem('selectedTime', slot);
+              console.log(dateStr);
+              console.log(slot);
+              markDateWithTick(dateStr);
             });
+            slotList.appendChild(li);
+          });
+        } else {
+          timeSlotBox.style.display = 'none';
+        }
+      },
+      events: Object.keys(bookableDays).map(date => ({
+        title: '',
+        start: date,
+        display: 'background',
+        backgroundColor: '#FFA4EE'
+      }))
+    });
 
-          slotList.appendChild(li);
-        });
-      } else {
+    calendar.render();
+
+    // On page load, restore tick mark if date was already selected
+    const savedDate = localStorage.getItem('selectedDate');
+    calendar.on('datesSet', function () {
+      if (savedDate) {
+        markDateWithTick(savedDate);
+        selectedDateEl.textContent = `Selected Date: ${savedDate}`;
         timeSlotBox.style.display = 'none';
       }
-    },
-    events: Object.keys(bookableDays).map(date => ({
-      title: '',
-      start: date,
-      display: 'background',  // Important! This makes the event a background highlight
-      backgroundColor: '#FFA4EE', // pink background for entire cell
-    })),
-    eventDidMount: function(info) {
-      // Optional: style
-    }
-  });
-
-  calendar.render();
+    });
+  }
 
   function markDateWithTick(dateStr) {
-    // Delay ensures calendar DOM is fully updated
     setTimeout(() => {
-      // Remove any existing tick marks
       document.querySelectorAll('.fc-daygrid-day .tick-mark').forEach(t => t.remove());
-
       const dayCell = calendarEl.querySelector(`[data-date="${dateStr}"]`);
       if (dayCell) {
         const tick = document.createElement('div');
@@ -79,19 +94,6 @@ document.addEventListener('DOMContentLoaded', function () {
     timeSlotBox.style.display = 'none';
   }
 
-  // On page load, restore tick mark if date was already selected
-  const savedDate = localStorage.getItem('selectedDate');
-
-calendar.render();
-
-// Wait until the calendar has finished rendering the visible dates
-calendar.on('datesSet', function () {
-    if (savedDate) {
-      markDateWithTick(savedDate);
-      selectedDateEl.textContent = `Selected Date: ${savedDate}`;
-      timeSlotBox.style.display = 'none';
-    }
-  });
-
+  // 🚀 Fetch data and kick off rendering
+  await loadAvailability();
 });
-console.log(window.calendar);
