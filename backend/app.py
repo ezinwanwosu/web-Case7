@@ -82,6 +82,7 @@ def send_confirmation_email(to_email, appointment_date):
     configuration.api_key['api-key'] = BREVO_API_KEY
     logging.info(f"BREVO_API_KEY loaded?{'yes' if BREVO_API_KEY else 'No'}")
     api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
+    logging.info(appointment_date)
 
     email_content = f"""
     <html>
