@@ -1,27 +1,28 @@
 from flask import Flask, request, jsonify
 import stripe
 import os
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
 import logging
 import sys
 from flask_cors import CORS
+import sib_api_v3_sdk
+from sib_api_v3_sdk.rest import ApiException
+from pprint import pprint
 
 logging.basicConfig(level=logging.INFO, handlers=[logging.StreamHandler(sys.stdout)])
 
 app = Flask(__name__)
-CORS(app)  # This enables CORS for all routes and origins by default
+CORS(app)
 
 # Stripe config
 stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
 endpoint_secret = os.getenv('STRIPE_WEBHOOK_SECRET')
 
-# Email config (Brevo SMTP)
-EMAIL_ADDRESS = os.getenv('EMAIL_ADDRESS')
-EMAIL_PASSWORD = os.getenv('EMAIL_PASSWORD')
+# Brevo API config
+BREVO_API_KEY = os.getenv('BREVO_API_KEY')
+SENDER_EMAIL = "booking@yoncesacrylics.co.uk"  # Must be verified in Brevo
+SENDER_NAME = "Yonce's Acrylics"
 
-# Simple in-memory storage (use a DB like Redis or SQLite for production)
+# In-memory storage (replace with DB for production)
 booking_cache = {}
 
 @app.after_request
@@ -33,14 +34,12 @@ def add_cors_headers(response):
 
 @app.route('/')
 def home():
-    return "<h1>Booking Confirmation is sent if the payment was successful.</p>"
+    return "<h1>Booking Confirmation is sent if the payment was successful.</h1>"
 
 @app.route('/store-booking', methods=['POST'])
 def store_booking():
     data = request.get_json()
     appointment_date = data.get('appointment_date')
-
-    # Save the appointment info using email as key
     booking_cache['2'] = appointment_date
     logging.info(f"Stored booking: {appointment_date}")
     return jsonify({'status': 'stored'}), 200
@@ -49,7 +48,6 @@ def store_booking():
 def stripe_webhook():
     logging.info("webhook hit")
     payload = request.get_data(as_text=True)
-    logging.info(f"payload: {payload}")
     sig_header = request.headers.get('stripe-signature')
     logging.info("📨 Webhook triggered!")
 
@@ -70,42 +68,39 @@ def stripe_webhook():
         appointment_date = booking_cache.get('2', "Unknown Date")
         logging.info(f"📅 Appointment: {appointment_date}")
 
-        if customer_email:
-            send_confirmation_email(customer_email, appointment_date)
-        else:
-            send_confirmation_email("yoncesacrylics@gmail.com", appointment_date)
+        send_confirmation_email(customer_email or "yoncesacrylics@gmail.com", appointment_date)
 
     return jsonify({'status': 'success'}), 200
 
 def send_confirmation_email(to_email, appointment_date):
-    cc_email = "yoncesacrylics@gmail.com"
-    subject = "Appointment Confirmation for Yonce's Acrylics"
-    body = f"""
-    <p>Thank you for your payment!</p>
-    <p>Your appointment is confirmed for <strong>{appointment_date}</strong>.</p>
+    configuration = sib_api_v3_sdk.Configuration()
+    configuration.api_key['api-key'] = BREVO_API_KEY
+
+    api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
+
+    email_content = f"""
+    <html>
+    <body>
+        <p>Thank you for your payment!</p>
+        <p>Your appointment is confirmed for <strong>{appointment_date}</strong>.</p>
+    </body>
+    </html>
     """
 
-    msg = MIMEMultipart()
-    msg['From'] = EMAIL_ADDRESS
-    msg['To'] = to_email
-    msg['Cc'] = cc_email
-    msg['Subject'] = subject
-    msg.attach(MIMEText(body, 'html'))
-
-    recipients = [to_email] + [cc_email]
+    email = sib_api_v3_sdk.SendSmtpEmail(
+        to=[{"email": to_email}],
+        cc=[{"email": "yoncesacrylics@gmail.com"}],
+        subject="Appointment Confirmation for Yonce's Acrylics",
+        html_content=email_content,
+        sender={"name": SENDER_NAME, "email": SENDER_EMAIL}
+    )
 
     try:
-        with smtplib.SMTP('smtp-relay.brevo.com', 587) as server:
-            server.ehlo()            # Optional but good practice
-            server.starttls()        # Upgrade to secure TLS connection
-            server.ehlo()            # Re-identify after STARTTLS
-            server.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
-            server.sendmail(EMAIL_ADDRESS, recipients, msg.as_string())
-
-            logging.info(f"✅ Confirmation email sent to {to_email}")
-    except Exception as e:
-        logging.error(f"Failed to send email: {e}")
+        response = api_instance.send_transac_email(email)
+        logging.info(f"✅ Email sent to {to_email}")
+        pprint(response)
+    except ApiException as e:
+        logging.error(f"❌ Failed to send email: {e}")
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)), debug=True)
-
