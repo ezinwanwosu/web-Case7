@@ -43,21 +43,24 @@ def store_booking():
 def stripe_webhook():
     payload = request.data
     sig_header = request.headers.get('stripe-signature')
+    print("📨 Webhook triggered!")
 
     try:
         event = stripe.Webhook.construct_event(payload, sig_header, endpoint_secret)
+        print(f"✅ Stripe Event: {event['type']}")
     except Exception as e:
-        print(f"Webhook error: {e}")
+        print(f"❌ Webhook error: {e}")
         return jsonify({'error': str(e)}), 400
 
     if event['type'] == 'checkout.session.completed':
+        print("💸 Payment confirmed!")
         session_obj = event['data']['object']
         customer_email = session_obj.get('customer_email')
+        print(f"📧 Customer email: {customer_email}")
 
-        # Look up the booking info saved earlier
         appointment_date = booking_cache.get(customer_email, "Unknown Date")
+        print(f"📅 Appointment: {appointment_date}")
 
-        # Send confirmation email
         send_confirmation_email(customer_email, appointment_date)
 
     return jsonify({'status': 'success'}), 200
