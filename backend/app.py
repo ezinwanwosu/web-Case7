@@ -31,15 +31,10 @@ def home():
 @app.route('/store-booking', methods=['POST'])
 def store_booking():
     data = request.get_json()
-    email = data.get('email')
     appointment_date = data.get('appointment_date')
-
-    if not email or not appointment_date:
-        return jsonify({'error': 'Missing email or appointment date'}), 400
-
     # Save the appointment info using email as key
-    booking_cache[email] = appointment_date
-    logging.info(f"Stored booking for {email} on {appointment_date}")
+    booking_cache['2'] = appointment_date
+    logging.info(f"Stored booking: {appointment_date}")
     return jsonify({'status': 'stored'}), 200
 
 @app.route('/webhook', methods=['POST'])
@@ -64,10 +59,13 @@ def stripe_webhook():
 
         logging.info(f"📧 Customer email: {customer_email}")
 
-        appointment_date = booking_cache.get(customer_email, "Unknown Date")
+        appointment_date = booking_cache.get('2', "Unknown Date")
         logging.info(f"📅 Appointment: {appointment_date}")
 
-        send_confirmation_email(customer_email, appointment_date)
+        if customer_email:
+            send_confirmation_email(customer_email, appointment_date)
+        else:
+            send_confirmation_email("yoncesacrylics@gmail.com", appointment_date)
 
     return jsonify({'status': 'success'}), 200
 
