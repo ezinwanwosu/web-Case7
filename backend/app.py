@@ -41,7 +41,9 @@ def store_booking():
 
 @app.route('/webhook', methods=['POST'])
 def stripe_webhook():
+    print("webhook hit")
     payload = request.data
+    print(f"payload: {payload}")
     sig_header = request.headers.get('stripe-signature')
     print("📨 Webhook triggered!")
 
