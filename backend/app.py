@@ -19,7 +19,7 @@ endpoint_secret = os.getenv('STRIPE_WEBHOOK_SECRET')
 
 # Email config (Brevo SMTP)
 BREVO_API_KEY = os.getenv('BREVO_API_KEY')
-SENDER_EMAIL = "booking@yonceacrylics.co.uk"
+SENDER_EMAIL = "booking@yoncesacrylics.co.uk"
 SENDER_NAME = "Yonce's Acrylics"
 # Simple in-memory storage (use a DB like Redis or SQLite for production)
 booking_cache = {}
