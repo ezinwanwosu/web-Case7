@@ -21,6 +21,10 @@ EMAIL_PASSWORD = os.getenv('EMAIL_PASSWORD')
 # Simple in-memory storage (use a DB like Redis or SQLite for production)
 booking_cache = {}
 
+@app.route('/')
+def home():
+    return "<h1>Booking Confirmation is sent if the payment was successful.</p>"
+
 @app.route('/store-booking', methods=['POST'])
 def store_booking():
     data = request.get_json()
@@ -74,7 +78,6 @@ def send_confirmation_email(to_email, appointment_date):
     msg.attach(MIMEText(body, 'html'))
 
     recipients = [to_email] + [cc_email]
-    server.sendmail(EMAIL_ADDRESS, recipients, msg.as_string())
 
     try:
         with smtplib.SMTP_SSL('smtp-relay.sendinblue.com', 465) as server:
@@ -82,7 +85,7 @@ def send_confirmation_email(to_email, appointment_date):
             server.sendmail(EMAIL_ADDRESS, recipients, msg.as_string())
         print(f"✅ Confirmation email sent to {to_email}")
     except Exception as e:
-        print(f"❌ Failed to send email: {e}")
+        print(f"Failed to send email: {e}")
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)), debug=True)
