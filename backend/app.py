@@ -9,8 +9,6 @@ import sys
 
 logging.basicConfig(level=logging.INFO, handlers=[logging.StreamHandler(sys.stdout)])
 
-logging.info("hello world")
-
 app = Flask(__name__)
 
 # Stripe config
@@ -32,6 +30,7 @@ def home():
 def store_booking():
     data = request.get_json()
     appointment_date = data.get('appointment_date')
+    
     # Save the appointment info using email as key
     booking_cache['2'] = appointment_date
     logging.info(f"Stored booking: {appointment_date}")

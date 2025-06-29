@@ -141,25 +141,34 @@ function removeFromCart(index) {
 }
 
 // Checkout handler
-checkoutBtn.addEventListener('click', () => {
+checkoutBtn.addEventListener('click', async () => {
   const appointmentDate = loadSelectedDate();
   const appointmentTime = loadSelectedTime();
-  const data = { appointment_date:`${appointmentDate} ${appointmentTime}`};
+  const data = { appointment_date: `${appointmentDate} ${appointmentTime}` };
 
-  fetch("https://yoncesacrylicss.onrender.com/store-booking",{
-    method:"POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify(data)
-  });
-  window.location.href = "https://buy.stripe.com/test_28E6oG456b7f35J4KfaIM00";
-  localStorage.removeItem(cartItemsKey);       // Clear cart
-  localStorage.removeItem(selectedDateKey);    // Clear date
-  renderCart();
-  renderAppointmentDate();
-  renderTotalTime();
-  renderTotalPrice();
+  try {
+    const res = await fetch("https://yoncesacrylicss.onrender.com/store-booking", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    });
+    if (!res.ok) throw new Error('Failed to store booking');
 
+    // Only redirect after booking is stored
+    window.location.href = "https://buy.stripe.com/test_28E6oG456b7f35J4KfaIM00";
+
+    localStorage.removeItem(cartItemsKey);       
+    localStorage.removeItem(selectedDateKey);    
+    renderCart();
+    renderAppointmentDate();
+    renderTotalTime();
+    renderTotalPrice();
+  } catch (err) {
+    alert('Error saving booking. Please try again.');
+    console.error(err);
+  }
 });
+
 
 
 // Initial render
