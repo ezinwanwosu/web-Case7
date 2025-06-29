@@ -1,22 +1,27 @@
 from flask import Flask, request, jsonify, session, redirect, url_for, render_template_string
 import stripe
 import os
-import sendgrid
-from sendgrid.helpers.mail import Mail
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = 'your-very-secret-key'  # for sessions
+app.secret_key = 'your-very-secret-key'
 
-# Set your Stripe secret key and webhook secret here
-stripe.api_key = os.getenv('STRIPE_SECRET_KEY')  # e.g. "sk_test_..."
+# Stripe setup
+stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
 endpoint_secret = os.getenv('STRIPE_WEBHOOK_SECRET')
 
-SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
+# Email credentials (Brevo SMTP)
+EMAIL_ADDRESS = os.getenv('EMAIL_ADDRESS')
+EMAIL_PASSWORD = os.getenv('EMAIL_PASSWORD')
 
-# Replace this with your real front-end URL
-YOUR_FRONTEND_URL = "templates/success.html"
+# === Replace this with your success HTML path or URL ===
+YOUR_FRONTEND_URL = "https://yourdomain.com/success"
 
-# === Create checkout session ===
 @app.route('/create-checkout-session', methods=['POST'])
 def create_checkout_session():
     data = request.json
@@ -27,7 +32,7 @@ def create_checkout_session():
         checkout_session = stripe.checkout.Session.create(
             payment_method_types=['card'],
             line_items=[{
-                'price': 'price_xyz',  # Replace with your actual price ID
+                'price': 'price_xyz',  # Replace with your actual Stripe price ID
                 'quantity': 1,
             }],
             mode='payment',
@@ -42,7 +47,6 @@ def create_checkout_session():
     except Exception as e:
         return jsonify(error=str(e)), 400
 
-# === Stripe webhook for payment success ===
 @app.route('/webhook', methods=['POST'])
 def webhook():
     payload = request.data
@@ -61,26 +65,33 @@ def webhook():
         # Send confirmation email
         send_confirmation_email(customer_email, appointment_date)
 
-        # Mark session as paid - here, store info in memory or DB (simple example: save in-memory)
-        # For demo, store in Flask session (not for prod)
+        # Mark session as paid (for demo)
         session['paid'] = True
 
     return jsonify({'status': 'success'}), 200
 
 def send_confirmation_email(to_email, appointment_date):
-    sg = sendgrid.SendGridAPIClient(api_key=SENDGRID_API_KEY)
-    message = Mail(
-        from_email='your-email@domain.com',
-        to_emails=to_email,
-        subject='Appointment Confirmation',
-        html_content=f"<p>Thank you for your booking! Your appointment is scheduled for <b>{appointment_date}</b>.</p>"
-    )
-    try:
-        sg.send(message)
-    except Exception as e:
-        print(f"Email sending failed: {e}")
+    subject = "Appointment Confirmation"
+    body = f"""
+    <p>Thank you for your booking!</p>
+    <p>Your appointment is scheduled for <strong>{appointment_date}</strong>.</p>
+    """
 
-# === Success page only accessible if paid ===
+    msg = MIMEMultipart()
+    msg['From'] = EMAIL_ADDRESS
+    msg['To'] = to_email
+    msg['Subject'] = subject
+    msg.attach(MIMEText(body, 'html'))
+
+    try:
+        # Brevo (Sendinblue) SMTP
+        with smtplib.SMTP_SSL('smtp-relay.sendinblue.com', 465) as server:
+            server.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
+            server.sendmail(EMAIL_ADDRESS, to_email, msg.as_string())
+        print("✅ Email sent.")
+    except Exception as e:
+        print(f"❌ Failed to send email: {e}")
+
 @app.route('/success')
 def success():
     if session.get('paid'):
