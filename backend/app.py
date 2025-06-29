@@ -4,9 +4,12 @@ import os
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from dotenv import load_dotenv
+import logging
+import sys
 
-load_dotenv()
+logging.basicConfig(level=logging.INFO, handlers=[logging.StreamHandler(sys.stdout)])
+
+logging.info("hello world")
 
 app = Flask(__name__)
 
@@ -36,32 +39,32 @@ def store_booking():
 
     # Save the appointment info using email as key
     booking_cache[email] = appointment_date
-    print(f"Stored booking for {email} on {appointment_date}")
+    logging.info(f"Stored booking for {email} on {appointment_date}")
     return jsonify({'status': 'stored'}), 200
 
 @app.route('/webhook', methods=['POST'])
 def stripe_webhook():
-    print("webhook hit")
+    logging.info("webhook hit")
     payload = request.get_data(as_text=True)
-    print(f"payload: {payload}")
+    logging.info(f"payload: {payload}")
     sig_header = request.headers.get('stripe-signature')
-    print("📨 Webhook triggered!")
+    logging.info("📨 Webhook triggered!")
 
     try:
         event = stripe.Webhook.construct_event(payload, sig_header, endpoint_secret)
-        print(f"✅ Stripe Event: {event['type']}")
+        logging.info(f"✅ Stripe Event: {event['type']}")
     except Exception as e:
-        print(f"❌ Webhook error: {e}")
+        logging.info(f"❌ Webhook error: {e}")
         return jsonify({'error': str(e)}), 400
 
     if event['type'] == 'checkout.session.completed':
-        print("💸 Payment confirmed!")
+        logging.info("💸 Payment confirmed!")
         session_obj = event['data']['object']
         customer_email = session_obj.get('customer_email')
-        print(f"📧 Customer email: {customer_email}")
+        logging.info(f"📧 Customer email: {customer_email}")
 
         appointment_date = booking_cache.get(customer_email, "Unknown Date")
-        print(f"📅 Appointment: {appointment_date}")
+        logging.info(f"📅 Appointment: {appointment_date}")
 
         send_confirmation_email(customer_email, appointment_date)
 
@@ -85,12 +88,15 @@ def send_confirmation_email(to_email, appointment_date):
     recipients = [to_email] + [cc_email]
 
     try:
-        with smtplib.SMTP_SSL('smtp-relay.brevo.com', 587) as server:
+        with smtplib.SMTP('smtp-relay.brevo.com', 587) as server:
+            server.ehlo()
+            server.starttls()
             server.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
             server.sendmail(EMAIL_ADDRESS, recipients, msg.as_string())
-        print(f"✅ Confirmation email sent to {to_email}")
+
+        logging.info(f"✅ Confirmation email sent to {to_email}")
     except Exception as e:
-        print(f"Failed to send email: {e}")
+        logging.info(f"Failed to send email: {e}")
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)), debug=True)
