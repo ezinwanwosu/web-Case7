@@ -145,7 +145,7 @@ checkoutBtn.addEventListener('click', async () => {
   const appointmentDate = loadSelectedDate();
   const appointmentTime = loadSelectedTime();
   const data = { appointment_date: `${appointmentDate} ${appointmentTime}` };
-
+  console.log("trying")
   try {
     const res = await fetch("https://yoncesacrylicss.onrender.com/store-booking", {
       method: "POST",
