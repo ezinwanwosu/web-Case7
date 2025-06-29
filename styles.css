@@ -65,7 +65,14 @@ img{
     top: -100px;
     font-size: 2rem;
 }
-
+#NailPic{
+  position: relative;
+  margin-top: 20%;
+  margin-bottom: 1%;
+  left: 10%;
+  width: 80%;
+  height: 40%;
+}
 /* Shopping cart badge */
 .shopping_basket {
   position: fixed;
