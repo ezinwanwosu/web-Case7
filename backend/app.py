@@ -73,13 +73,17 @@ def send_confirmation_email(to_email, appointment_date):
     msg['Subject'] = subject
     msg.attach(MIMEText(body, 'html'))
 
+    recipients = [to_email] + [cc_email]
+    server.sendmail(EMAIL_ADDRESS, recipients, msg.as_string())
+
     try:
         with smtplib.SMTP_SSL('smtp-relay.sendinblue.com', 465) as server:
             server.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
-            server.sendmail(EMAIL_ADDRESS, to_email, msg.as_string())
+            server.sendmail(EMAIL_ADDRESS, recipients, msg.as_string())
         print(f"✅ Confirmation email sent to {to_email}")
     except Exception as e:
         print(f"❌ Failed to send email: {e}")
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)), debug=True)
+
