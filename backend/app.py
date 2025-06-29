@@ -11,7 +11,8 @@ from pprint import pprint
 logging.basicConfig(level=logging.INFO, handlers=[logging.StreamHandler(sys.stdout)])
 
 app = Flask(__name__)
-CORS(app)  # This enables CORS for all routes and origins by default
+CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
+
 
 # Stripe config
 stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
