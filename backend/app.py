@@ -18,7 +18,7 @@ stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
 endpoint_secret = os.getenv('STRIPE_WEBHOOK_SECRET')
 
 # Email config (Brevo SMTP)
-BREVO_API_KEY = os.getenv('EMAIL_ADDRESS')
+BREVO_API_KEY = os.getenv('BREVO_API_KEY')
 SENDER_EMAIL = "booking@yonceacrylics.co.uk"
 SENDER_NAME = "Yonce's Acrylics"
 # Simple in-memory storage (use a DB like Redis or SQLite for production)
@@ -80,7 +80,7 @@ def stripe_webhook():
 def send_confirmation_email(to_email, appointment_date):
     configuration = sib_api_v3_sdk.Configuration()
     configuration.api_key['api-key'] = BREVO_API_KEY
-
+    logging.info(f"BREVO_API_KEY loaded?{'yes' if BREVO_API_KEY else 'No'}")
     api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
 
     email_content = f"""
