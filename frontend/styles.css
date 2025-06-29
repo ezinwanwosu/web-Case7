@@ -103,6 +103,14 @@ img{
     transform: scale(1);
   }
 }
+#NailPic{
+  position: relative;
+  margin-top: 20%;
+  margin-bottom: 1%;
+  left: 10%;
+  width: 80%;
+  height: 40%;
+}
 .policies {
   border: 10px solid var(--babypink);
   box-shadow:
