@@ -60,7 +60,8 @@ def stripe_webhook():
     if event['type'] == 'checkout.session.completed':
         logging.info("💸 Payment confirmed!")
         session_obj = event['data']['object']
-        customer_email = session_obj.get('customer_email')
+        customer_email = session_obj.get('customer_email') or session_obj.get('customer_details', {}).get('email')
+
         logging.info(f"📧 Customer email: {customer_email}")
 
         appointment_date = booking_cache.get(customer_email, "Unknown Date")
