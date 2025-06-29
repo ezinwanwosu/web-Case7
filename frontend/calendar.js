@@ -108,5 +108,6 @@ document.addEventListener('DOMContentLoaded', async function () {
     timeSlotBox.style.display = 'none';
   }
 
+  // 🚀 Fetch data and kick off rendering
   await loadAvailability();
 });
