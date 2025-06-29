@@ -6,10 +6,12 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import logging
 import sys
+from flask_cors import CORS
 
 logging.basicConfig(level=logging.INFO, handlers=[logging.StreamHandler(sys.stdout)])
 
 app = Flask(__name__)
+CORS(app)  # This enables CORS for all routes and origins by default
 
 # Stripe config
 stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
@@ -22,6 +24,13 @@ EMAIL_PASSWORD = os.getenv('EMAIL_PASSWORD')
 # Simple in-memory storage (use a DB like Redis or SQLite for production)
 booking_cache = {}
 
+@app.after_request
+def add_cors_headers(response):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
+    response.headers['Access-Control-Allow-Methods'] = 'POST,GET,OPTIONS'
+    return response
+
 @app.route('/')
 def home():
     return "<h1>Booking Confirmation is sent if the payment was successful.</p>"
@@ -30,7 +39,7 @@ def home():
 def store_booking():
     data = request.get_json()
     appointment_date = data.get('appointment_date')
-    
+
     # Save the appointment info using email as key
     booking_cache['2'] = appointment_date
     logging.info(f"Stored booking: {appointment_date}")
