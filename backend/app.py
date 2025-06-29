@@ -88,14 +88,15 @@ def send_confirmation_email(to_email, appointment_date):
 
     try:
         with smtplib.SMTP('smtp-relay.brevo.com', 587) as server:
-            server.ehlo()
-            server.starttls()
+            server.ehlo()            # Optional but good practice
+            server.starttls()        # Upgrade to secure TLS connection
+            server.ehlo()            # Re-identify after STARTTLS
             server.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
             server.sendmail(EMAIL_ADDRESS, recipients, msg.as_string())
 
-        logging.info(f"✅ Confirmation email sent to {to_email}")
+            logging.info(f"✅ Confirmation email sent to {to_email}")
     except Exception as e:
-        logging.info(f"Failed to send email: {e}")
+        logging.error(f"Failed to send email: {e}")
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)), debug=True)
