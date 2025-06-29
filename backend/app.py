@@ -85,7 +85,7 @@ def send_confirmation_email(to_email, appointment_date):
     recipients = [to_email] + [cc_email]
 
     try:
-        with smtplib.SMTP_SSL('smtp-relay.brevo.com', 465) as server:
+        with smtplib.SMTP_SSL('smtp-relay.brevo.com', 587) as server:
             server.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
             server.sendmail(EMAIL_ADDRESS, recipients, msg.as_string())
         print(f"✅ Confirmation email sent to {to_email}")
