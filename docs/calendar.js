@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', async function () {
   const timeSlotBox = document.getElementById('timeslots');
 
   let bookableDays = {}; // Will be filled by backend
-
   // 🔁 Fetch availability data from backend
   async function loadAvailability() {
   try {
@@ -16,28 +15,39 @@ document.addEventListener('DOMContentLoaded', async function () {
       }
     });
 
-    if (!res.ok) throw new Error('Unauthorized');
+    if (!res.ok) {
+      const errorText = await res.text();
+      throw new Error(`Fetch error: ${res.status} - ${errorText}`);
+    }
 
     const data = await res.json();
+    console.log('Availability data received:', data);
 
-    console.log(data);
-
-    // Group by date
+    // Group slots by date
     const grouped = {};
     data.forEach(item => {
-      const date = item.start.split("T")[0];
-      const time = new Date(item.start).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      if (!grouped[date]) grouped[date] = [];
-      grouped[date].push(time);
+      // Defensive: make sure item.start exists and is a string
+      if (item.start && typeof item.start === 'string') {
+        const date = item.start.split("T")[0];
+        const time = new Date(item.start).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        if (!grouped[date]) grouped[date] = [];
+        grouped[date].push(time);
+      } else {
+        console.warn('Invalid item.start:', item.start);
+      }
     });
 
+    // Assign to shared/global variable so other functions can use it
     bookableDays = grouped;
-    loadCalendar(); // re-render calendar after loading
+
+    // Instead of recreating the calendar, ideally update events on existing calendar
+    loadCalendar();
 
   } catch (err) {
-    console.error(err);
+    console.error('Error loading availability:', err);
   }
 }
+
   function loadCalendar() {
     const calendar = new FullCalendar.Calendar(calendarEl, {
       initialView: 'dayGridMonth',

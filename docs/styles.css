@@ -106,7 +106,7 @@ img{
 #NailPic{
   position: relative;
   margin-top: 20%;
-  margin-bottom: 1%;
+  margin-bottom: 5%;
   left: 10%;
   width: 80%;
   height: 40%;
@@ -429,7 +429,7 @@ img{
 
 .carousel-grid {
   display: grid;
-  grid-template-columns: auto auto;
+  grid-template-columns: auto auto auto;
   grid-template-rows: auto auto;
   column-gap: 400px;
   padding: 2rem;
@@ -537,7 +537,6 @@ img{
   flex-direction: column;
   gap: 0.3rem; /* small, readable gap */
   justify-content: space-between;
-  margin-bottom: 300px;
  
 }
 
@@ -661,7 +660,11 @@ img{
 .contact i:hover{
     color: var(--babypink);
 }
-
+#NailPic{
+  margin-top: 100px;
+  margin-bottom: 100px;
+  left: 30px;
+}
 
 
 /* Popup styling */

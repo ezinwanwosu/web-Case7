@@ -1,3 +1,5 @@
 flask
 stripe
 python-dotenv
+flask-cors
+sib-api-v3-sdk
