@@ -155,7 +155,7 @@ checkoutBtn.addEventListener('click', async () => {
     if (!res.ok) throw new Error('Failed to store booking');
 
     // Only redirect after booking is stored
-    window.location.href = "https://buy.stripe.com/test_28E6oG456b7f35J4KfaIM00";
+    window.location.href = "https://buy.stripe.com/eVqdR93nd2Ptfes3lO6wE00";
 
     localStorage.removeItem(cartItemsKey);       
     localStorage.removeItem(selectedDateKey);    
