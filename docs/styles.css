@@ -475,7 +475,7 @@ img{
 }
 .header h2{
     font-size: 2rem;
-    margin-top: 400px;
+    margin-top: 350px;
     text-align: center;
 
 }
@@ -483,7 +483,7 @@ img{
     text-align: center;
     margin-top: 0px;
     color: var(--babypink);
-    font-size: 3rem;
+    font-size: 3.2rem;
 }
 img{
     position: absolute;
@@ -494,7 +494,7 @@ img{
     height: 190px;
     border-color: var(--babypink);
     top:20%;
-    left:25%;
+    left:24%;
     margin-bottom: -25%;
 
 }
@@ -537,6 +537,7 @@ img{
   flex-direction: column;
   gap: 0.3rem; /* small, readable gap */
   justify-content: space-between;
+  margin-bottom: 100px;
  
 }
 
@@ -578,7 +579,7 @@ img{
   
   position: relative;
   top: -120px;
-  left:0;
+  left:30px;
   z-index: 0;
 }
 
@@ -607,14 +608,14 @@ img{
   width: fit-content;
   padding: -20px;
   position: relative;
-  top: -110px;
+  top: -100px;
 }
 #calendar {
   max-width: 100%;
   margin: 20px auto;
   height: 400px;
   position: relative;
-  top: -50px;
+  top: 0px;
   overflow-y:hidden;
 }
 .contact{
@@ -641,7 +642,7 @@ img{
   width: fit-content;
   padding:0;
   position: relative;
-  top: -110px;
+  top: -90px;
   left:15%;
 }
 .contact a{
@@ -661,9 +662,11 @@ img{
     color: var(--babypink);
 }
 #NailPic{
-  margin-top: 100px;
+  margin-top: 80px;
   margin-bottom: 100px;
-  left: 30px;
+  left: 15px;
+  width: 90%;
+  height: 250px;
 }
 
 
@@ -768,22 +771,21 @@ img{
     font-size:0.3rem;
     position: absolute;
     width:100px;
+    text-align: center;
   
 }
 .label h2{
-    display: flex;
+    
     flex-wrap: wrap;
     font-size: 1.6rem;
+    text-align: center;
 }
 .noselect {
     user-select: none;
     -webkit-user-select: none; /* Safari */
     -ms-user-select: none;     /* IE 10+ */
 }
-#freestyle-carousel h2{
-  position: relative;
-  right:10px;
-}
+
 }
 
 @media (max-width:320px){
