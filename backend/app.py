@@ -6,7 +6,7 @@ import sys
 from flask_cors import CORS
 import sib_api_v3_sdk
 from sib_api_v3_sdk.rest import ApiException
-from vercel_wsgi import handle_request  # <-- needed for Vercel
+
 from pprint import pprint
 
 logging.basicConfig(level=logging.INFO, handlers=[logging.StreamHandler(sys.stdout)])
@@ -113,5 +113,6 @@ def send_confirmation_email(to_email, appointment_date):
     except ApiException as e:
         logging.error(f"Failed to send email: {e}")
 
-def handler(environ, start_response):
-    return handle_request(app, environ, start_response)
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)), debug=True)
+
