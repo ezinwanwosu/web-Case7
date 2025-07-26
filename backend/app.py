@@ -6,6 +6,7 @@ import sys
 from flask_cors import CORS
 import sib_api_v3_sdk
 from sib_api_v3_sdk.rest import ApiException
+from vercel_wsgi import handle_request  # <-- needed for Vercel
 from pprint import pprint
 
 logging.basicConfig(level=logging.INFO, handlers=[logging.StreamHandler(sys.stdout)])
@@ -96,7 +97,10 @@ def send_confirmation_email(to_email, appointment_date):
 
     email = sib_api_v3_sdk.SendSmtpEmail(
         to=[{"email": to_email}],
-        cc=[{"email": "yoncesacrylics@gmail.com"}],
+        cc=[
+            {"email": "yoncesacrylics@gmail.com"},
+            {"email": "ezinwa.b.nwosu@gmail.com"}  # Add your second CC email here
+        ],
         subject="Appointment Confirmation for Yonce's Acrylics",
         html_content=email_content,
         sender={"name": SENDER_NAME, "email": SENDER_EMAIL}
@@ -109,6 +113,5 @@ def send_confirmation_email(to_email, appointment_date):
     except ApiException as e:
         logging.error(f"Failed to send email: {e}")
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)), debug=True)
-
+def handler(environ, start_response):
+    return handle_request(app, environ, start_response)

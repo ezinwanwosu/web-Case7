@@ -1,5 +1,6 @@
 flask
 stripe
 python-dotenv
+vercel-wsgi
 flask-cors
 sib-api-v3-sdk

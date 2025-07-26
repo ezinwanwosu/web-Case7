@@ -1,52 +1,27 @@
-document.addEventListener('DOMContentLoaded', async function () {
+document.addEventListener('DOMContentLoaded', function () {
   const calendarEl = document.getElementById('calendar');
   const slotList = document.getElementById('slot-list');
   const selectedDateEl = document.getElementById('selected-date');
   const timeSlotBox = document.getElementById('timeslots');
 
-  let bookableDays = {}; // Will be filled by backend
-  // 🔁 Fetch availability data from backend
-  async function loadAvailability() {
-  try {
-    const res = await fetch('https://private2-uzol.onrender.com/api/availability', {
-      method: 'GET',
-      headers: {
-        'Authorization': 'Bearer von-UDBNdsjf-4nfd!f9'
-      }
-    });
+  // 📅 Static availability (replace with your actual data)
+const bookableDays = {
+  "2025-08-02": ["09:00", "10:00", "12:00", "16:00", "18:00"], // Saturday
+  "2025-08-07": ["09:00", "10:00", "12:00", "16:00", "18:00"], // Thursday
+  "2025-08-09": ["09:00", "10:00", "12:00", "16:00", "18:00"], // Saturday
+  "2025-08-14": ["09:00", "10:00", "12:00", "16:00", "18:00"], // Thursday
+  "2025-08-15": ["09:00", "10:00", "12:00", "16:00", "18:00"], // Friday
+  "2025-08-16": ["09:00", "10:00", "12:00", "16:00", "18:00"], // Saturday
+  "2025-08-21": ["09:00", "10:00", "12:00", "16:00", "18:00"], // Thursday
+  "2025-08-22": ["09:00", "10:00", "12:00", "16:00", "18:00"], // Friday
+  "2025-08-23": ["09:00", "10:00", "12:00", "16:00", "18:00"], // Saturday
+  "2025-08-28": ["09:00", "10:00", "12:00", "16:00", "18:00"], // Thursday
+  "2025-08-29": ["09:00", "10:00", "12:00", "16:00", "18:00"], // Friday
+  "2025-08-30": ["09:00", "10:00", "12:00", "16:00", "18:00"]  // Saturday
+};
 
-    if (!res.ok) {
-      const errorText = await res.text();
-      throw new Error(`Fetch error: ${res.status} - ${errorText}`);
-    }
 
-    const data = await res.json();
-    console.log('Availability data received:', data);
-
-    // Group slots by date
-    const grouped = {};
-    data.forEach(item => {
-      // Defensive: make sure item.start exists and is a string
-      if (item.start && typeof item.start === 'string') {
-        const date = item.start.split("T")[0];
-        const time = new Date(item.start).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        if (!grouped[date]) grouped[date] = [];
-        grouped[date].push(time);
-      } else {
-        console.warn('Invalid item.start:', item.start);
-      }
-    });
-
-    // Assign to shared/global variable so other functions can use it
-    bookableDays = grouped;
-
-    // Instead of recreating the calendar, ideally update events on existing calendar
-    loadCalendar();
-
-  } catch (err) {
-    console.error('Error loading availability:', err);
-  }
-}
+  loadCalendar();
 
   function loadCalendar() {
     const calendar = new FullCalendar.Calendar(calendarEl, {
@@ -67,8 +42,6 @@ document.addEventListener('DOMContentLoaded', async function () {
             li.addEventListener('click', () => {
               localStorage.setItem('selectedDate', dateStr);
               localStorage.setItem('selectedTime', slot);
-              console.log(dateStr);
-              console.log(slot);
               markDateWithTick(dateStr);
             });
             slotList.appendChild(li);
@@ -87,7 +60,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     calendar.render();
 
-    // On page load, restore tick mark if date was already selected
+    // Restore previously selected date from localStorage
     const savedDate = localStorage.getItem('selectedDate');
     calendar.on('datesSet', function () {
       if (savedDate) {
@@ -117,7 +90,4 @@ document.addEventListener('DOMContentLoaded', async function () {
     }, 10);
     timeSlotBox.style.display = 'none';
   }
-
-  // 🚀 Fetch data and kick off rendering
-  await loadAvailability();
 });
