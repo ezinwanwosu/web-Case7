@@ -147,7 +147,7 @@ checkoutBtn.addEventListener('click', async () => {
   const data = { appointment_date: `${appointmentDate} ${appointmentTime}` };
   console.log("trying")
   try {
-    const res = await fetch("https://yoncesacrylicss.onrender.com/store-booking", {
+    const res = await fetch("https://web-case7-git-main-ezinwanwosus-projects.vercel.app/store-booking", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data)
